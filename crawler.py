@@ -1,4 +1,5 @@
-from . import request
+from .crawler_thread import *
+
 class Crawler():
     def __init__(self, url_list, parse_func, processing_data_func=None, method="GET"):
         self.method = method
@@ -6,16 +7,23 @@ class Crawler():
         self.parse = parse_func
         self.processing_data = processing_data_func
         self.data = []
-    
-    def request(self):
-        self.reponse = request(self.method, self.url_list)
-
-    def start_parsing(self):
-        self.data.append(self.parse(self.reponse))
 
     def start_crawling(self):
-        while self.url_list.get_urls_size():
-            self.request()
-            self.start_parsing()
+        thread_num = 1
+        if self.url_list.get_urls_size() > 5:
+            thread_num = 5
+
+        self.thread_list = []
+        for i in range(thread_num):
+            thread = CrawlerThread(self.url_list, self.parse, self.method)
+            thread.start()
+            self.thread_list.append(thread)
+        
+        for t in self.thread_list:
+            t.join()
+        
+        for i in self.thread_list:
+            self.data += i.data
+
         if self.processing_data:
             self.processing_data(self.data)

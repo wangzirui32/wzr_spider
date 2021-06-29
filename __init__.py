@@ -1,2 +1,2 @@
-from .crawler import Crawler
-from .urls import UrlList
+from .crawler import *
+from .urls import *
