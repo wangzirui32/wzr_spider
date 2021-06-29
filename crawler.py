@@ -7,6 +7,7 @@ class Crawler():
         self.url_list = url_list
         self.parse = parse_func
         self.save_data = save_data_func
+        self.data = []
         self.headers = {
             "User-Agent": UA().random,
         }
@@ -26,7 +27,7 @@ class Crawler():
 
     def start_parsing(self):
         try:
-            self.data = self.parse(self.reponse)
+            self.data.append(self.parse(self.reponse))
         except Exception:
             return False
         else:
@@ -36,4 +37,4 @@ class Crawler():
         while self.url_list.get_urls_size():
             self.request()
             self.start_parsing()
-            self.save_data(self.data)
+        self.save_data(self.data)
