@@ -1,6 +1,4 @@
-import requests
-from fake_useragent import UserAgent as UA
-
+from . import request
 class Crawler():
     def __init__(self, url_list, parse_func, processing_data_func=None, method="GET"):
         self.method = method
@@ -10,25 +8,10 @@ class Crawler():
         self.data = []
     
     def request(self):
-        try:
-            self.headers = {
-                "User-Agent": UA().random,
-            }
-            self.reponse = requests.request(self.method,
-                                            self.url_list.get_url(),
-                                            headers=self.headers)
-        except Exception:
-            return False
-        else:
-            return True
+        self.reponse = request(self.method, self.url_list)
 
     def start_parsing(self):
-        try:
-            self.data.append(self.parse(self.reponse))
-        except Exception:
-            return False
-        else:
-            return True
+        self.data.append(self.parse(self.reponse))
 
     def start_crawling(self):
         while self.url_list.get_urls_size():
