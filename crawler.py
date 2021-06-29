@@ -8,9 +8,6 @@ class Crawler():
         self.parse = parse_func
         self.save_data = save_data_func
         self.data = []
-        self.headers = {
-            "User-Agent": UA().random,
-        }
     
     def request(self):
         try:
