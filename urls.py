@@ -1,7 +1,7 @@
 import queue
 
 class UrlList():
-    def __init__(self, *urls):
+    def __init__(self, urls):
         self.url_list = queue.Queue(len(urls))
 
         for url in urls:

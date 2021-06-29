@@ -2,11 +2,11 @@ import requests
 from fake_useragent import UserAgent as UA
 
 class Crawler():
-    def __init__(self, url_list, parse_func, save_data_func, method="GET"):
+    def __init__(self, url_list, parse_func, processing_data_func=None, method="GET"):
         self.method = method
         self.url_list = url_list
         self.parse = parse_func
-        self.save_data = save_data_func
+        self.processing_data = processing_data_func
         self.data = []
     
     def request(self):
@@ -34,4 +34,5 @@ class Crawler():
         while self.url_list.get_urls_size():
             self.request()
             self.start_parsing()
-        self.save_data(self.data)
+        if self.processing_data:
+            self.processing_data(self.data)
