@@ -7,9 +7,11 @@ def get_page(method, url_list):
     headers = {
         "User-Agent": UA().random,
     }
-    reponse = requests.request(method, url_list.get_url(), headers=headers)
-
-    return reponse
+    if url_list.get_urls_size():
+        reponse = requests.request(method, url_list.get_url(), headers=headers)
+        return reponse
+    else:
+        return None
 
 class CrawlerThread(threading.Thread):
     def __init__(self, url_list, item_list, method="GET"):
