@@ -1,3 +1,3 @@
 from .crawler import Crawler
 from .urls import UrlList
-from .tags_object import CrawlerTag
+from .item import Item
