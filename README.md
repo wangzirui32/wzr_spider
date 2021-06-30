@@ -23,6 +23,7 @@ def processing_data(data):
         write_content = ""
         for i in data:
             write_content += i['title'] + "\n"
+        f.write(write_content)
 ```
 最后，创建爬虫项目并开始运行：
 ```py
