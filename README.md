@@ -5,24 +5,28 @@ Wzr_Spider是一个简单的爬虫框架，使用它很简单。
 from wzr_spider import *
 url_list = UrlList(["https://github.com", "https://gitee.com"])
 ```
-然后，编写解析HTML的函数：
+然后，选择需要抓取的字段：
 ```py
-from bs4 import BeautifulSoup
-def parse(reponse):
-    """抓取每个页面的标题"""
-    soup = BeautifulSoup(reponse.text, "html.parser")
-    title = soup.find("title").get_text()
-    return title
+"""
+Item参数解释：
+爬取标签名称
+标签属性
+爬取属性内容
+是否爬取所有相关标签
+"""
+item_list = [Item("title", {}, "title", "text", False)]
 ```
 接着，编写处理数据的函数：
 ```py
 def processing_data(data):
     with open("title.txt", "w", encoding="UTF-8") as f:
-        f.write("\n".join(data))
+        write_content = ""
+        for i in data:
+            write_content += i['title'] + "\n"
 ```
 最后，创建爬虫项目并开始运行：
 ```py
-crawler = Crawler(url_list, parse, processing_data)
+crawler = Crawler(url_list, item_list, processing_data)
 crawler.start_crawling()
 ```
 运行结束后，打开目录下的title.txt，可以看到成功抓取数据。
