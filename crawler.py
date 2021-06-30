@@ -15,7 +15,7 @@ class Crawler():
 
         self.thread_list = []
         for i in range(thread_num):
-            thread = CrawlerThread(self.url_list, self.parse, self.item_list, self.method)
+            thread = CrawlerThread(self.url_list, self.item_list, self.method)
             thread.start()
             self.thread_list.append(thread)
         

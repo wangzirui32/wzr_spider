@@ -12,9 +12,8 @@ def get_page(method, url_list):
     return reponse
 
 class CrawlerThread(threading.Thread):
-    def __init__(self, url_list, parse_func, item_list, method="GET"):
+    def __init__(self, url_list, item_list, method="GET"):
         super().__init__()
-        self.parse = parse_func
         self.url_list = url_list
         self.item_list = item_list
         self.method = method
