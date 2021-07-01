@@ -27,9 +27,12 @@ class CrawlerThread(threading.Thread):
                 reponse = get_page(self.method, self.url_list)
                 soup = BeautifulSoup(reponse.text, "lxml")
 
+                item_dict = {}
                 for i in self.item_list:
                     tag_item_data = i.get_item_data(soup)
-                    self.item_data.append(tag_item_data)
+                    item_dict.update(tag_item_data)
+
+                self.item_data.append(item_dict)
             except Exception:
                 continue
 
