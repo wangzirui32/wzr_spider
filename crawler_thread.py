@@ -1,5 +1,5 @@
 import threading
-from bs4 import BeautifulSoup
+from lxml import etree
 from .request import get_page
 
 class CrawlerThread(threading.Thread):
@@ -14,11 +14,11 @@ class CrawlerThread(threading.Thread):
         while self.url_list.get_urls_size():
             try:
                 html = get_page(self.method, self.url_list)
-                soup = BeautifulSoup(html, "lxml")
+                html_obj = etree.HTML(html)
 
                 item_dict = {}
                 for i in self.item_list:
-                    tag_item_data = i.get_item_data(soup)
+                    tag_item_data = i.get_item_data(html_obj)
                     item_dict.update(tag_item_data)
 
                 self.item_data.append(item_dict)

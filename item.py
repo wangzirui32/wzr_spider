@@ -1,35 +1,15 @@
 class Item():
-    def __init__(self, tag_name, tag_attrs, item_name,
-                get_attrs='text', get_all_tag=False):
-        self.tag_name    = tag_name
-        self.tag_attrs   = tag_attrs
+    def __init__(self, tag_xpath, item_name, get_all_tag=False):
+        self.tag_xpath   = tag_xpath
         self.get_all_tag = get_all_tag
-        self.get_attrs   = get_attrs
         self.item_name   = item_name
 
-    def get_item_data(self, soup):
-        self.tag = soup.find_all(self.tag_name, self.tag_attrs)
+    def get_item_data(self, html_obj):
+        self.tag_data = html_obj.xpath(self.tag_xpath)
 
         if not self.get_all_tag:
-            self.tag = self.tag[0]
-        get_content = self.get_tag_data()
-        self.item = {self.item_name: get_content}
+            self.tag_data = self.tag_data[0]
+            
+        self.item = {self.item_name: self.tag_data}
 
         return self.item
-
-    def get_tag_data(self):
-        if not self.get_all_tag:
-            self.tag = self.tag[0]
-            get_content = self.get_tag_attrs(self.tag)
-        else:
-            get_content = []
-            for tag in self.tag:
-                get_content.append(self.get_tag_attrs(tag))
-        
-        return get_content
-    
-    def get_tag_attrs(self, tag):
-        if self.get_attrs == 'text':
-            return tag.get_text()
-        else:
-            return tag.attrs[self.get_attrs]
