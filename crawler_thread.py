@@ -11,9 +11,9 @@ class CrawlerThread(threading.Thread):
 
     def run(self):
         self.item_data = []
-        while self.url_list.get_urls_size():
+        while self.url_list.qsize():
             try:
-                html = get_page(self.method, self.url_list)
+                html = get_page(self.method, self.url_list.get_url())
                 html_obj = etree.HTML(html)
 
                 item_dict = {}

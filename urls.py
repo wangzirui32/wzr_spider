@@ -1,17 +1,13 @@
-import queue
+from queue import Queue
 
-class UrlList():
+class UrlList(Queue):
     def __init__(self, urls):
-        self.url_list = queue.Queue(len(urls))
-
+        super().__init__()
         for url in urls:
-            self.url_list.put(url)
+            self.put(url)
 
     def get_url(self):
-        if self.url_list.qsize():
-            return self.url_list.get()
+        if self.qsize() != 0:
+            return self.get()
         else:
             return None
-
-    def get_urls_size(self):
-        return self.url_list.qsize()

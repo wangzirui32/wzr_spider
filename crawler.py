@@ -10,7 +10,7 @@ class Crawler():
 
     def start_crawling(self):
         thread_num = 1
-        if self.url_list.get_urls_size() > 4:
+        if self.url_list.qsize() > 4:
             thread_num = 5
 
         self.thread_list = []
