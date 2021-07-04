@@ -1,17 +1,6 @@
 import threading
 from bs4 import BeautifulSoup
-import requests
-from fake_useragent import UserAgent as UA
-
-def get_page(method, url_list):
-    headers = {
-        "User-Agent": UA().random,
-    }
-    if url_list.get_urls_size():
-        reponse = requests.request(method, url_list.get_url(), headers=headers)
-        return reponse
-    else:
-        return None
+from .request import get_page
 
 class CrawlerThread(threading.Thread):
     def __init__(self, url_list, item_list, method="GET"):
@@ -24,8 +13,8 @@ class CrawlerThread(threading.Thread):
         self.item_data = []
         while self.url_list.get_urls_size():
             try:
-                reponse = get_page(self.method, self.url_list)
-                soup = BeautifulSoup(reponse.text, "lxml")
+                html = get_page(self.method, self.url_list)
+                soup = BeautifulSoup(html, "lxml")
 
                 item_dict = {}
                 for i in self.item_list:

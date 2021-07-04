@@ -8,24 +8,28 @@ class Item():
         self.item_name   = item_name
 
     def get_item_data(self, soup):
-        tag = soup.find_all(self.tag_name, self.tag_attrs)
-        
+        self.tag = soup.find_all(self.tag_name, self.tag_attrs)
+
         if not self.get_all_tag:
-            tag = tag[0]
-            if self.get_attrs == "text":
-                get_content = tag.get_text()
-            else:
-                get_content = tag.attrs[self.get_attrs]
-            
-        else:
-            get_content = []
-            if self.get_attrs == "text":
-                for i in tag:
-                    get_content.append(i.get_text())
-            else:
-                for i in tag:
-                    get_content.append(i.attrs[self.get_attrs])
-            
+            self.tag = self.tag[0]
+        get_content = self.get_tag_data()
         self.item = {self.item_name: get_content}
 
         return self.item
+
+    def get_tag_data(self):
+        if not self.get_all_tag:
+            self.tag = self.tag[0]
+            get_content = self.get_tag_attrs(self.tag)
+        else:
+            get_content = []
+            for tag in self.tag:
+                get_content.append(self.get_tag_attrs(tag))
+        
+        return get_content
+    
+    def get_tag_attrs(self, tag):
+        if self.get_attrs == 'text':
+            return tag.get_text()
+        else:
+            return tag.attrs[self.get_attrs]
