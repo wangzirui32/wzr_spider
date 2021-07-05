@@ -1,6 +1,9 @@
 # Wzr_Spider 爬虫框架
 Wzr_Spider是一个简单的爬虫框架，使用它很简单。
-本爬虫框架会自动检测网页的编码，将乱码编译成正常的字符串，而且内置了爬虫线程，较多网址时可以开启5个线程同时抓取。
+本爬虫框架会自动检测网页的编码，将乱码编译成正常的字符串，
+而且内置了爬虫线程，较多网址时可以开启5个线程同时抓取，
+抓取时依赖于requests和lxml模块。
+***
 首先，您需要创建一个网址列表，代码：
 ```py
 from wzr_spider import *
@@ -10,12 +13,11 @@ url_list = UrlList(["https://github.com", "https://gitee.com"])
 ```py
 """
 Item参数解释：
-爬取标签名称
-标签属性
-爬取属性内容
-是否爬取所有相关标签
+Xpath路径
+Item名称
+是否获取所有相关标签
 """
-item_list = [Item("title", {}, "title", "text", False)]
+item_list = [Item("//title/text()", "title", False)]
 ```
 接着，编写处理数据的函数：
 ```py
