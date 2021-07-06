@@ -1,20 +1,17 @@
 from .crawler_thread import *
 
 class Crawler():
-    def __init__(self, url_list, item_list, processing_data_func, method="GET"):
-        self.method = method
-        self.url_list = url_list
-        self.item_list = item_list
+    def __init__(self, url_list, item_list, processing_data_func=None, method="GET", thread_num=1):
+        self.method          = method
+        self.url_list        = url_list
+        self.item_list       = item_list
         self.processing_data = processing_data_func
-        self.data = []
+        self.data            = []
+        self.thread_num      = thread_num
 
-    def start_crawling(self):
-        thread_num = 1
-        if self.url_list.qsize() > 4:
-            thread_num = 5
-
+    def __start_threading(self):
         self.thread_list = []
-        for _ in range(thread_num):
+        for _ in range(self.thread_num):
             thread = CrawlerThread(self.url_list, self.item_list, self.method)
             thread.start()
             self.thread_list.append(thread)
@@ -22,5 +19,11 @@ class Crawler():
         for t in self.thread_list:
             t.join()
 
+    def start_crawling(self):
+        self.__start_threading()
         self.item_data = get_thread_item_data(self.thread_list)
-        self.processing_data(self.item_data)
+        if self.processing_data:
+            self.processing_data(self.item_data)
+
+    def get_crawler_data(self):
+        return self.item_data

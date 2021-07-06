@@ -4,7 +4,7 @@ from .request import get_page
 
 class CrawlerThread(threading.Thread):
     def __init__(self, url_list, item_list, method="GET"):
-        super().__init__()
+        super().__init__(daemon=True)
         self.url_list = url_list
         self.item_list = item_list
         self.method = method
