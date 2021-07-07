@@ -1,8 +1,7 @@
 from .crawler_thread import *
 
 class Crawler():
-    def __init__(self, url_list, item_list, processing_data_func=None, method="GET", thread_num=1):
-        self.method          = method
+    def __init__(self, url_list, item_list=None, processing_data_func=None, thread_num=1):
         self.url_list        = url_list
         self.item_list       = item_list
         self.processing_data = processing_data_func
@@ -12,7 +11,7 @@ class Crawler():
     def __start_threading(self):
         self.thread_list = []
         for _ in range(self.thread_num):
-            thread = CrawlerThread(self.url_list, self.item_list, self.method)
+            thread = CrawlerThread(self.url_list, self.item_list)
             thread.start()
             self.thread_list.append(thread)
         
@@ -21,9 +20,9 @@ class Crawler():
 
     def start_crawling(self):
         self.__start_threading()
-        self.item_data = get_thread_item_data(self.thread_list)
+        self.data = get_thread_item_data(self.thread_list)
         if self.processing_data:
-            self.processing_data(self.item_data)
+            self.processing_data(self.data)
 
     def get_crawler_data(self):
-        return self.item_data
+        return self.data
