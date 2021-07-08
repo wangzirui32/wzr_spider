@@ -4,6 +4,7 @@ Wzr_Spider是一个简单的爬虫框架，使用它很简单。
 而且内置了爬虫线程，较多网址时可以开启多个线程同时抓取，
 抓取时依赖于requests和lxml模块。
 ***
+# 1. 基本操作
 首先，您需要创建一个网址列表，代码：
 ```py
 from wzr_spider import UrlList, Item, Crawler
@@ -39,8 +40,9 @@ crawler.start_crawling()
 CSDN博客 - 专业IT技术发表平台
 百度一下，你就知道
 ```
+# 2. 爬虫器数据结构
 提示：爬虫器返回的信息的结构如下：
-```json
+```js
 [{"item_1": "data_list_1", "item_2": "data_list_2" ...},
  {"item_1": "data_list_1", "item_2": "data_list_2" ...},
  ...
@@ -48,9 +50,8 @@ CSDN博客 - 专业IT技术发表平台
 ```
 列表的第一项为第一个页面爬取的字段信息，第二项为第二个页面爬取的信息。
 以此类推，列表的项数为URL的数量是相同的，每一项都是以字段名为键，数据为值的字典。
-这样就完成了一整个爬虫的链条。
-
-当然，如果你只想读取数据，Crawler类中的解析数据的函数（processing_data）可以不加，
+# 3. get_crawler_data方法
+如果你只想读取数据，Crawler类中的解析数据的函数（processing_data）可以不加，
 要获取数据就要调用Crawler的方法get_crawler_data，它会返回爬虫器返回的字段数据。示例：
 ```py
 from wzr_spider import UrlList, Item, Crawler
@@ -66,7 +67,8 @@ print(crawler.get_crawler_data())
 [{"title": "CSDN博客 - 专业IT技术发表平台"}, {"title": "百度一下，你就知道"}]
 ```
 可以看到，get_crawler_data函数成功返回了爬取的数据。
-还有，如果你想只获取页面，可以不加字段（item_list）参数，如下代码所示：
+# 4. 只获取页面
+如果你想只获取页面，可以不加字段（item_list）参数，为JSON接口的爬取提供了便利，如下代码所示：
 ```py
 from wzr_spider import UrlList, Crawler
 # 这是一个API接口
@@ -97,3 +99,45 @@ f.close()
 {"current_user_url": "https://api.github.com/user", "current_user_authorizations_html_url": "", ...}
 ```
 由于页面上的json数据参杂了很多“\n”换行符，所以要去掉换行符再进行转换。
+# 5. 有参数的请求
+Crawler还支持有参数的请求，代码：
+```py
+from wzr_spider import UrlList, Crawler
+
+url_list = UrlList(["http://www.httpbin.org/get"])
+# 请求参数为字典{"test": 1}
+crawler = Crawler(url_list, request_params={"test": 1})
+crawler.start_crawling()
+
+import json
+data = json.loads(crawler.get_crawler_data()[0].replace("\n", ""))
+f = open("data.json", "w")
+json.dump(data, f)
+f.close()
+```
+data.json：
+```js
+{"args": {"test": "1"}, "headers": ...}
+```
+可以看到httpbin成功获得了参数信息。
+# 6. POST请求
+前面介绍的仅仅为GET请求方式去获取页面，接下来介绍如何用爬虫器实现POST请求，代码：
+```py
+from wzr_spider import UrlList, Crawler
+
+url_list = UrlList(["http://www.httpbin.org/post"])
+crawler = Crawler(url_list, request_params={"test": 1}, method="POST")
+crawler.start_crawling()
+print(crawler.get_crawler_data())
+
+import json
+data = json.loads(crawler.get_crawler_data()[0].replace("\n", ""))
+f = open("data.json", "w")
+json.dump(data, f)
+f.close()
+```
+data.json内容：
+```js
+{"args": {}, "data": "", "files": {}, "form": {"test": "1"}, "headers": ...}
+```
+可以看到，表单数据成功提交。
