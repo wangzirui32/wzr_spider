@@ -3,18 +3,30 @@ from lxml import etree
 from .request import get_page
 
 class CrawlerThread(threading.Thread):
-    def __init__(self, url_list, item_list, method, request_params):
+    def __init__(self,
+                url_list,
+                item_list,
+                method,
+                request_params,
+                headers,
+                cookies):
         super().__init__(daemon=True)
         self.url_list       = url_list
         self.item_list      = item_list
         self.method         = method
         self.request_params = request_params
+        self.headers        = headers
+        self.cookies        = cookies
 
     def run(self):
         self.data = []
         while self.url_list.qsize():
             try:
-                page = get_page(self.method, self.url_list.get_url(), self.request_params)
+                page = get_page(self.method,
+                                self.url_list.get_url(),
+                                self.request_params,
+                                self.headers,
+                                self.cookies)
                 if self.item_list:
                     html_obj = etree.HTML(page)
 
@@ -23,7 +35,7 @@ class CrawlerThread(threading.Thread):
                         item_data = i.get_item_data(html_obj)
                         item.update(item_data)
 
-                    self.data.append(item_data)
+                    self.data.append(item)
                 else:
                     self.data.append(page)
             except Exception:

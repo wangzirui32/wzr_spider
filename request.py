@@ -8,16 +8,23 @@ def set_encoding(text):
 
     return after_encoded
 
-def get_page(method, url, request_params):
-    headers = {
-        "User-Agent": UA().random,
-    }
+def get_page(method, url, request_params, headers, cookies):
+    if not headers:
+        headers = {
+            "User-Agent": UA().random,
+        }
+    headers['cookie'] = cookies
     if method == 'GET':
-        reponse = requests.request(method, url, headers=headers, params=request_params)
+        reponse = requests.get(url,
+                                headers=headers,
+                                params=request_params)
     else:
-        reponse = requests.request(method, url, headers=headers, data=request_params)
+        reponse = requests.request(method,
+                                    url,
+                                    headers=headers,
+                                    data=request_params,
+                                    cookies=cookies)
 
-    
     html = set_encoding(reponse.content)
 
     return html
