@@ -10,11 +10,14 @@ Crawler(
     url_list,                    # 网址列表对象
     item_list=None,              # 字段对象列表
     processing_data_func=None,   # 处理数据的函数
+    parse_func=None              # 网页解析函数
     thread_num=1,                # 爬取时开启的线程数
     method="GET",                # 爬取时使用的请求方式
     request_params={},           # 请求的参数或表单
     headers={},                  # 自定义请求头
-    cookies="")                  # 自定义cookies
+    cookies="",                  # 自定义cookies
+    output_message=True          # 是否输出提示信息
+)
 ```
 # 2. UrlList对象参数
 ```py
@@ -42,6 +45,10 @@ Item(
 ```
 列表的第一项为第一个页面爬取的字段信息，第二项为第二个页面爬取的信息。
 以此类推，列表的项数为URL的数量是相同的，每一项都是以字段名为键，数据为值的字典。
+当然，如果你加上了解析器函数，那么结构应该如下：
+```
+[目标网页1解析器返回数据, 目标网页2解析器返回数据, 目标网页3解析器返回数据, ...]
+```
 # 5. 基本示例
 代码：
 ```py
@@ -68,6 +75,20 @@ crawler.start_crawling()
 ```
 CSDN博客 - 专业IT技术发表平台
 百度一下，你就知道
+```
+当然，可以加上解析器函数：
+```py
+from wzr_spider import UrlList, Item, Crawler
+from lxml import etree
+
+url_list = UrlList(['https://blog.csdn.net/', "https://www.baidu.com"])
+
+def parse(html):
+    title = etree.HTML(html).xpath("//title/text()")[0]
+    return title
+
+crawler = Crawler(url_list, parse_func=parse)
+crawler.start_crawling()
 ```
 # 6. get_crawler_data方法
 如果你只想读取数据，Crawler类中的解析数据的函数（processing_data）可以不加，

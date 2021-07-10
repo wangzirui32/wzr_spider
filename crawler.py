@@ -5,20 +5,24 @@ class Crawler():
                 url_list,
                 item_list=None,
                 processing_data_func=None,
+                parse_func=None,
                 thread_num=1,
                 method="GET",
                 request_params={},
                 headers={},
-                cookies=""):
+                cookies="",
+                output_message=True):
         self.url_list        = url_list
         self.item_list       = item_list
+        self.parse           = parse_func
         self.processing_data = processing_data_func
-        self.data            = []
         self.thread_num      = thread_num
+        self.data            = []
         self.method          = method
         self.request_params  = request_params
         self.headers         = headers
         self.cookies         = cookies
+        self.output_message  = output_message
 
     def __start_threading(self):
         self.thread_list = []
@@ -26,6 +30,8 @@ class Crawler():
             thread = CrawlerThread(self.url_list,
                                     self.item_list,
                                     self.method,
+                                    self.parse,
+                                    self.output_message,
                                     self.request_params,
                                     self.headers,
                                     self.cookies)
