@@ -32,7 +32,8 @@ UrlList(['http://url-1.com', 'http://url-2.com', ...])
 Item(
     tag_xpath,         # 需要爬取标签的XPath
     item_name,         # 字段名称
-    get_all_tag=False  # 是否获取所有相关标签
+    get_all_tag=False, # 是否获取所有相关标签
+    default=None       # 爬取失败的填充值
 )
 ```
 # 4. 爬虫器数据结构
